@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RVA – Sumas con compensación | S2B</title>
+<title>Math Training RVA | Dos estrategias de suma · S2B</title>
+<meta name="description" content="Math Training RVA S2B: completar la decena y sumar con compensación. Actividades animadas de segundo grado.">
+<meta property="og:title" content="Math Training RVA | Dos estrategias de suma · S2B">
 <style>
 :root{font-family:Arial,sans-serif;color:#14243a;background:#eaf1fa}*{box-sizing:border-box}
 body{margin:0}.wrap{max-width:1100px;margin:auto;padding:18px}header{display:flex;justify-content:space-between;align-items:center;gap:12px}
@@ -39,7 +41,7 @@ button{background:#174b88;color:white}button.secondary{background:#dce6f4;color:
 @media(max-width:600px){.stage{min-height:540px;padding:18px}.wrap{padding:10px}header{flex-wrap:wrap}}
 </style></head><body><div class="wrap">
 <header><h1>Math Training RVA · S2B</h1><span class="tag">2 estrategias · Eureka Math²</span></header>
-<div class="controls"><label for="mode">Estrategia:</label><select id="mode"><option value="comp">Sumas con compensación</option></select>
+<div class="controls"><label for="mode">Estrategia:</label><select id="mode"><option value="bridge">1 · Completar la decena</option><option value="comp">2 · Compensación</option><option value="all" selected>Ambas, en secuencia</option></select>
 <label for="speed">Velocidad:</label><select id="speed"><option value="3800">Normal (recomendada)</option><option value="5500">Lenta</option><option value="2700">Rápida</option></select></div>
 <div class="stage" aria-live="polite"><span class="pill" id="label"></span><h2 id="heading"></h2>
 <div class="question" id="problem"></div><svg id="linkOverlay"><path id="linkPath" d=""/></svg>
@@ -48,7 +50,7 @@ button{background:#174b88;color:white}button.secondary{background:#dce6f4;color:
 <div class="line step" id="line1"></div><div class="line step" id="line2"></div><div class="note step" id="note"></div></div>
 <div class="progress"><div class="bar" id="bar"></div></div><div class="small" id="counter"></div>
 <div class="controls"><button class="secondary" id="prev">◀ Ejemplo anterior</button><button id="play">▶ Reproducir</button><button class="secondary" id="nextstep">Siguiente paso</button><button class="secondary" id="next">Ejemplo siguiente ▶</button><button class="secondary" id="reset">↺ Reiniciar</button></div>
-<p class="small">Practica sumas con compensación. Observa cómo redondear, avanzar y retroceder 1 o 2. Usa «Siguiente paso» para pensar antes de revelar la respuesta.</p><footer class="copyright">Rene Velazquez · RVA Copyright 2026</footer></div>
+<p class="small">Presentación animada para proyectar: cada parte del vínculo aparece por separado y una curva enlaza los números que completan la decena. Use «Siguiente paso» para controlar la explicación. Funciona sin internet una vez descargada.</p><footer class="copyright">Rene Velazquez · RVA Copyright 2026</footer></div>
 <script>
 const bridge=[
 [9,6,1,5,10],[8,7,2,5,10],[19,7,1,6,20],[28,9,2,7,30],[39,8,1,7,40],

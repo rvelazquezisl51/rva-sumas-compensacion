@@ -1,0 +1,12 @@
+ACTUALIZACIÓN DE GITHUB PAGES — MATH TRAINING RVA S2B
+
+1. Entra en github.com/rvelazquezisl51/rva-sumas-compensacion
+2. Haz clic en Add file > Upload files.
+3. Sube el archivo index.html de este ZIP.
+4. GitHub detectará que index.html ya existe: confirma el reemplazo con Commit changes.
+5. Espera a que termine el despliegue de GitHub Pages y actualiza la web con Ctrl+F5.
+
+El enlace público se mantiene:
+https://rvelazquezisl51.github.io/rva-sumas-compensacion/
+
+La página incluye ambas estrategias y el selector permite mostrarlas por separado o juntas.
