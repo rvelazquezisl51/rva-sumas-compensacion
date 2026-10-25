@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RVA – Sumas con compensación | S2B</title>
+<style>
+:root{font-family:Arial,sans-serif;color:#14243a;background:#eaf1fa}*{box-sizing:border-box}
+body{margin:0}.wrap{max-width:1100px;margin:auto;padding:18px}header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+h1{font-size:clamp(22px,3vw,34px);margin:8px 0}.tag{background:#174b88;color:white;padding:9px 16px;border-radius:30px;font-weight:bold}
+.stage{isolation:isolate;background:white;border-radius:22px;padding:28px;min-height:570px;box-shadow:0 8px 28px #14243a19;position:relative;overflow:hidden}
+.pill{display:inline-block;border-radius:20px;background:#e5dcfa;color:#6234a0;padding:8px 16px;font-weight:bold}
+h2{font-size:clamp(24px,3.3vw,40px);margin:20px 0;text-align:center}.question{text-align:center;font-size:clamp(24px,4.5vw,55px);font-weight:bold;margin:20px 0}
+#linkOverlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}
+#linkPath{fill:none;stroke:#ef8d20;stroke-width:5;stroke-linecap:round;stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset 1.25s ease}
+#linkOverlay.shown #linkPath{stroke-dashoffset:0}
+
+.diagram{display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:155px}
+.top{font-size:37px;font-weight:bold}.branches{width:180px;height:45px}.parts{display:flex;width:180px;justify-content:space-around;font-size:34px;font-weight:bold;color:#8a36b4}
+.parts span{display:inline-block;min-width:38px;text-align:center}
+@keyframes branchLeft{0%{opacity:0;transform:translate(50px,-58px) scale(.6)}100%{opacity:1;transform:translate(0,0) scale(1)}}
+@keyframes branchRight{0%{opacity:0;transform:translate(-50px,-58px) scale(.6)}100%{opacity:1;transform:translate(0,0) scale(1)}}
+@keyframes slowReveal{0%{opacity:0;transform:translateY(-24px)}100%{opacity:1;transform:translateY(0)}}
+.parts span.revealLeft{animation:branchLeft 1.7s ease-out both}
+.parts span.revealRight{animation:branchRight 1.7s ease-out both}
+.line.visible{animation:slowReveal 1.4s ease-out both}
+.comp .chip.appear{animation:slowReveal 2.8s ease-out both}
+
+.line{font-size:clamp(24px,3.5vw,39px);text-align:center;font-weight:bold;margin:16px 0;min-height:48px}
+.step{opacity:0;transform:translateY(10px);transition:.45s}.step.visible{opacity:1;transform:none}
+.note{text-align:center;font-size:clamp(17px,2vw,24px);color:#455d77;min-height:60px}
+.controls{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:16px 0}
+button,select{border:0;border-radius:12px;padding:13px 18px;font-size:16px;font-weight:bold;cursor:pointer}
+button{background:#174b88;color:white}button.secondary{background:#dce6f4;color:#17385f}button:disabled{opacity:.4;cursor:default}
+.progress{height:9px;background:#d7e3f0;border-radius:20px;overflow:hidden;margin:10px 0}.bar{height:100%;background:#8052bd;transition:width .3s}
+.small{text-align:center;color:#51657b}
+.copyright{text-align:center;color:#52657f;font-weight:bold;font-size:15px;margin:16px 0 4px;padding-top:12px;border-top:1px solid #cbd7e6}
+.answer{color:#16834c;display:inline-block;animation:answerReveal .75s ease-out both}
+@keyframes answerReveal{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}.comp{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.chip{background:#e5dcfa;border-radius:14px;padding:12px 18px;font-size:clamp(25px,3vw,38px);font-weight:bold}
+.arrow{color:#9250b5;font-size:32px}.hidden{display:none!important}
+@media(max-width:600px){.stage{min-height:540px;padding:18px}.wrap{padding:10px}header{flex-wrap:wrap}}
+</style></head><body><div class="wrap">
+<header><h1>Math Training RVA · S2B</h1><span class="tag">2 estrategias · Eureka Math²</span></header>
+<div class="controls"><label for="mode">Estrategia:</label><select id="mode"><option value="comp">Sumas con compensación</option></select>
+<label for="speed">Velocidad:</label><select id="speed"><option value="3800">Normal (recomendada)</option><option value="5500">Lenta</option><option value="2700">Rápida</option></select></div>
+<div class="stage" aria-live="polite"><span class="pill" id="label"></span><h2 id="heading"></h2>
+<div class="question" id="problem"></div><svg id="linkOverlay"><path id="linkPath" d=""/></svg>
+<div id="bond" class="diagram"><div class="top" id="bondTop"></div><svg class="branches" viewBox="0 0 180 45"><path d="M90 2 L40 42 M90 2 L140 42" stroke="#8a36b4" stroke-width="3" fill="none"/></svg><div class="parts"><span id="part1"></span><span id="part2"></span></div></div>
+<div id="comp" class="comp hidden"><span class="chip" id="from"></span><span class="arrow">→</span><span class="chip" id="round"></span><span class="arrow">→</span><span class="chip" id="result"></span></div>
+<div class="line step" id="line1"></div><div class="line step" id="line2"></div><div class="note step" id="note"></div></div>
+<div class="progress"><div class="bar" id="bar"></div></div><div class="small" id="counter"></div>
+<div class="controls"><button class="secondary" id="prev">◀ Ejemplo anterior</button><button id="play">▶ Reproducir</button><button class="secondary" id="nextstep">Siguiente paso</button><button class="secondary" id="next">Ejemplo siguiente ▶</button><button class="secondary" id="reset">↺ Reiniciar</button></div>
+<p class="small">Practica sumas con compensación. Observa cómo redondear, avanzar y retroceder 1 o 2. Usa «Siguiente paso» para pensar antes de revelar la respuesta.</p><footer class="copyright">Rene Velazquez · RVA Copyright 2026</footer></div>
+<script>
+const bridge=[
+[9,6,1,5,10],[8,7,2,5,10],[19,7,1,6,20],[28,9,2,7,30],[39,8,1,7,40],
+[48,6,2,4,50],[49,14,1,13,50],[28,35,2,33,30],[119,27,1,26,120],
+[138,29,2,27,140],[148,27,2,25,150],[58,139,2,137,60]];
+const compensation=[
+[19,9,10,1],[28,19,20,1],[47,28,30,2],[137,39,40,1],
+[146,28,30,2],[158,49,50,1],[236,38,40,2],[275,99,100,1]];
+let examples=[],i=0,step=0,timer=null,playing=false;
+const $=id=>document.getElementById(id);
+function load(reset=true){let m=$('mode').value;examples=m==='bridge'?bridge.map(x=>({kind:'bridge',x})):m==='comp'?compensation.map(x=>({kind:'comp',x})):[...bridge.map(x=>({kind:'bridge',x})),...compensation.map(x=>({kind:'comp',x}))];if(reset)i=0;step=0;render();}
+function render(){const e=examples[i],b=e.kind==='bridge',x=e.x; $('label').textContent=b?'ESTRATEGIA 1 · COMPLETAR LA DECENA':'ESTRATEGIA 2 · COMPENSACIÓN';
+$('heading').textContent=b?'Descompón y completa la decena':'Redondea y corrige';
+$('problem').innerHTML=`<span id="firstAddend">${x[0]}</span> + ${x[1]} = ${step>=6?`<span class="answer">${x[0]+x[1]}</span>`:'?'}`;
+$('bond').classList.toggle('hidden',!b);$('comp').classList.toggle('hidden',b);
+if(b){$('bondTop').textContent=x[1];$('part1').textContent=step>=1?x[2]:'?';$('part2').textContent=step>=2?x[3]:'?';$('part1').className=step>=1?'revealLeft':'';$('part2').className=step>=2?'revealRight':'';
+$('line1').textContent=`${x[0]} + ${x[2]} = ${x[4]}`;$('line2').textContent=`${x[4]} + ${x[3]} = ${x[0]+x[1]}`;
+$('note').textContent=`${x[0]} necesita ${x[2]} para llegar a ${x[4]}.`;
+}else{$('from').textContent=`+ ${x[1]}`;$('round').textContent=step>=1?`+ ${x[2]}`:'?';$('result').textContent=step>=2?`− ${x[3]}`:'?';$('round').classList.toggle('appear',step===1);$('result').classList.toggle('appear',step===2);
+$('line1').textContent=`${x[0]} + ${x[2]} = ${x[0]+x[2]}`;$('line2').textContent=`${x[0]+x[2]} − ${x[3]} = ${x[0]+x[1]}`;
+$('note').textContent=`Sumamos ${x[3]} de más y luego lo restamos.`;}
+$('line1').classList.toggle('visible',step>=4);$('line2').classList.toggle('visible',step>=5);$('note').classList.toggle('visible',step>=6);drawLink(b && step>=3);
+$('counter').textContent=`Ejemplo ${i+1} de ${examples.length} · Paso ${step} de 6`;
+$('bar').style.width=((i+step/6)/examples.length*100)+'%';
+$('prev').disabled=i===0;$('next').disabled=i===examples.length-1;}
+function drawLink(show){
+ const overlay=$('linkOverlay'),path=$('linkPath');
+ overlay.classList.remove('shown');
+ if(!show)return;
+ const stage=document.querySelector('.stage').getBoundingClientRect();
+ const a=$('firstAddend').getBoundingClientRect(),b=$('part1').getBoundingClientRect();
+ const ax=(a.left+a.right)/2-stage.left, ay=(a.top+a.bottom)/2-stage.top;
+ const bx=(b.left+b.right)/2-stage.left, by=(b.top+b.bottom)/2-stage.top;
+ const left=Math.min(ax,bx)-58;
+ path.setAttribute('d',`M ${ax-16} ${ay+15} C ${left} ${ay+8}, ${left} ${by-10}, ${bx-13} ${by-4}`);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>overlay.classList.add('shown')));
+}
+window.addEventListener('resize',()=>{if(examples[i]?.kind==='bridge'&&step>=3)drawLink(true)});
+function advance(){if(step<6)step++;else if(i<examples.length-1){i++;step=0}else{pause();return}render()}
+function pause(){playing=false;clearInterval(timer);timer=null;$('play').textContent='▶ Reproducir'}
+function play(){if(playing){pause();return}playing=true;$('play').textContent='⏸ Pausar';timer=setInterval(advance,Number($('speed').value));}
+$('play').onclick=play;$('nextstep').onclick=()=>{pause();advance()};
+$('next').onclick=()=>{pause();if(i<examples.length-1){i++;step=0;render()}};
+$('prev').onclick=()=>{pause();if(i>0){i--;step=0;render()}};
+$('reset').onclick=()=>{pause();load()};
+$('mode').onchange=()=>{pause();load()};$('speed').onchange=()=>{if(playing){pause();play()}};
+document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return;if(e.key==='ArrowRight'){pause();advance()}if(e.key===' '){e.preventDefault();play()}});
+load();
+</script></body></html>

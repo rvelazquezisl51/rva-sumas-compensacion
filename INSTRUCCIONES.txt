@@ -1,0 +1,7 @@
+RVA – Sumas con compensación (2.NBT.B.5)
+
+Sube index.html a la raíz de un repositorio público independiente de GitHub.
+En Settings > Pages > Deploy from a branch, selecciona main y /(root), guarda.
+La dirección será https://TU-USUARIO.github.io/NOMBRE-REPOSITORIO/
+
+Rene Velazquez · RVA Copyright 2026
